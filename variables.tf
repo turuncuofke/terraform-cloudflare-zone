@@ -3,6 +3,11 @@ variable "zone" {
   description = "The DNS zone name which will be added."
 }
 
+variable "account_id" {
+  type        = string
+  description = "Configure API client to always use a specific account."
+}
+
 variable "zone_enabled" {
   type        = bool
   description = "Whether to create DNS zone otherwise use existing."
@@ -10,8 +15,8 @@ variable "zone_enabled" {
 }
 
 variable "records" {
-  type        = list(any)
-  default     = []
+  type        = map
+  default     = {}
   description = <<-DOC
     name:
       The name of the record.

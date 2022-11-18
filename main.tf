@@ -6,10 +6,6 @@ locals {
   zone_exists     = module.this.enabled && ! var.zone_enabled
   records_enabled = module.this.enabled && length(var.records) > 0
   zone_id         = local.zone_enabled ? join("", cloudflare_zone.default.*.id) : (local.zone_exists ? lookup(data.cloudflare_zones.default[0].zones[0], "id") : null)
-  records = local.records_enabled ? {
-    for index, record in var.records :
-    try(record.key, format("%s-%s", record.name, record.type)) => record
-  } : {}
 }
 
 data "cloudflare_zones" "default" {
@@ -28,10 +24,11 @@ resource "cloudflare_zone" "default" {
   jump_start = var.jump_start
   plan       = var.plan
   type       = var.type
+  account_id = var.account_id
 }
 
 resource "cloudflare_record" "default" {
-  for_each = local.records
+  for_each = var.records
 
   zone_id  = local.zone_id
   name     = each.value.name
