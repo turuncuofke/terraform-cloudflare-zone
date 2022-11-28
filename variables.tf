@@ -15,7 +15,7 @@ variable "zone_enabled" {
 }
 
 variable "records" {
-  type        = map
+  type        = map(any)
   default     = {}
   description = <<-DOC
     name:
@@ -32,6 +32,21 @@ variable "records" {
     proxied:
       Whether the record gets Cloudflare's origin protection. 
       Default value: false.
+  DOC
+}
+
+variable "access_rules" {
+  type        = map(any)
+  default     = {}
+  description = <<-DOC
+    configuration:
+      Rule configuration to apply to a matched request. Required values:
+        target: The request property to target.
+        value: The value to target. Depends on target's type.
+    mode:
+      The action to apply to a matched request.
+    notes:
+      A personal note about the rule. Typically used as a reminder or explanation for the rule.
   DOC
 }
 

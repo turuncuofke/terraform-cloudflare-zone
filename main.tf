@@ -3,7 +3,7 @@ locals {
   smart_routing   = local.argo_enabed && var.argo_smart_routing_enabled ? "on" : "off"
   argo_enabed     = module.this.enabled && var.argo_enabled
   zone_enabled    = module.this.enabled && var.zone_enabled
-  zone_exists     = module.this.enabled && ! var.zone_enabled
+  zone_exists     = module.this.enabled && !var.zone_enabled
   records_enabled = module.this.enabled && length(var.records) > 0
   zone_id         = local.zone_enabled ? join("", cloudflare_zone.default.*.id) : (local.zone_exists ? lookup(data.cloudflare_zones.default[0].zones[0], "id") : null)
 }
@@ -19,12 +19,13 @@ data "cloudflare_zones" "default" {
 resource "cloudflare_zone" "default" {
   count = local.zone_enabled ? 1 : 0
 
-  zone       = var.zone
-  paused     = var.paused
-  jump_start = var.jump_start
-  plan       = var.plan
-  type       = var.type
-  account_id = var.account_id
+  zone         = var.zone
+  paused       = var.paused
+  jump_start   = var.jump_start
+  plan         = var.plan
+  type         = var.type
+  account_id   = var.account_id
+  access_rules = var.access_rules
 }
 
 resource "cloudflare_record" "default" {
@@ -45,4 +46,13 @@ resource "cloudflare_argo" "default" {
   zone_id        = local.zone_id
   tiered_caching = local.tiered_caching
   smart_routing  = local.smart_routing
+}
+
+resource "cloudflare_access_rule" "default" {
+  for_each = var.access_rules
+
+  zone_id       = local.zone_id
+  notes         = each.value.notes
+  mode          = each.value.mode
+  configuration = each.value.configuration
 }
