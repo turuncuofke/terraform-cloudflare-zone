@@ -25,7 +25,6 @@ resource "cloudflare_zone" "default" {
   plan         = var.plan
   type         = var.type
   account_id   = var.account_id
-  access_rules = var.access_rules
 }
 
 resource "cloudflare_record" "default" {
@@ -52,7 +51,21 @@ resource "cloudflare_access_rule" "default" {
   for_each = var.access_rules
 
   zone_id       = local.zone_id
-  notes         = each.value.notes
+  notes         = lookup(each.value, "notes", null)
   mode          = each.value.mode
   configuration = each.value.configuration
+}
+
+resource "cloudflare_rate_limit" "default" {
+  for_each = var.cloudflare_rate_limits
+
+  zone_id             = local.zone_id
+  threshold           = each.value.threshold
+  period              = each.value.period
+  action              = each.value.action
+  match               = lookup(each.value, "match", null)
+  disabled            = lookup(each.value, "disabled", null)
+  description         = lookup(each.value, "description", null)
+  bypass_url_patterns = lookup(each.value, "bypass_url_patterns", null)
+  correlate           = lookup(each.value, "correlate", null)
 }
