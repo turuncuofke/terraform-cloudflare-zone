@@ -46,26 +46,3 @@ resource "cloudflare_argo" "default" {
   tiered_caching = local.tiered_caching
   smart_routing  = local.smart_routing
 }
-
-resource "cloudflare_access_rule" "default" {
-  for_each = var.access_rules
-
-  zone_id       = local.zone_id
-  notes         = lookup(each.value, "notes", null)
-  mode          = each.value.mode
-  configuration = each.value.configuration
-}
-
-resource "cloudflare_rate_limit" "default" {
-  for_each = var.cloudflare_rate_limits
-
-  zone_id             = local.zone_id
-  threshold           = each.value.threshold
-  period              = each.value.period
-  action              = each.value.action
-  match               = lookup(each.value, "match", null)
-  disabled            = lookup(each.value, "disabled", null)
-  description         = lookup(each.value, "description", null)
-  bypass_url_patterns = lookup(each.value, "bypass_url_patterns", null)
-  correlate           = lookup(each.value, "correlate", null)
-}
