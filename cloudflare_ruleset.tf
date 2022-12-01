@@ -6,18 +6,20 @@ resource "cloudflare_ruleset" "rate_limiting_example" {
   description = each.value.description
   kind        = each.value.kind
   phase       = each.value.phase
+  dynamic "rules" {
+    for_each = each.value.rules
+      content {
+        action = rules.value["action"]
+        ratelimit {
+          characteristics     = lookup(rules.value["ratelimit"], "characteristics", null)
+          period              = lookup(rules.value["ratelimit"], "period", null)
+          requests_per_period = lookup(rules.value["ratelimit"], "requests_per_period", null)
+          mitigation_timeout  = lookup(rules.value["ratelimit"], "mitigation_timeout", null)
+        }
 
-  rules {
-    action = each.value.rules.action
-    ratelimit {
-      characteristics     = lookup(each.value.rules.ratelimit, "characteristics", null)
-      period              = lookup(each.value.rules.ratelimit, "period", null)
-      requests_per_period = lookup(each.value.rules.ratelimit, "requests_per_period", null)
-      mitigation_timeout  = lookup(each.value.rules.ratelimit, "mitigation_timeout", null)
+        expression  = lookup(rules.value, "expression", null)
+        description = lookup(rules.value, "description", null)
+        enabled     = lookup(rules.value, "enabled", null)
+      }
     }
-
-    expression  = lookup(each.value.rules, "expression", null)
-    description = lookup(each.value.rules, "description", null)
-    enabled     = lookup(each.value.rules, "enabled", null)
-  }
 }
