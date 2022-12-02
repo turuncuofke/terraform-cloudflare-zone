@@ -77,22 +77,15 @@ variable "cloudflare_rulesets" {
   type        = map(any)
   default     = {}
   description = <<-DOC
-    threshold:
-      The threshold that triggers the rate limit mitigations.
-    period:
-      The time in seconds to count matching traffic. If the count exceeds threshold within this period the action will be performed
-    action:
-      The action to be performed when the threshold of matched traffic within the period defined is exceeded.
-    match:
-      Determines which traffic the rate limit counts towards the threshold.
-    disabled:
-      Whether this ratelimit is currently disabled.
-    description:
-      A note that you can use to describe the reason for a rate limit.
-    bypass_url_patterns:
-      URLs matching the patterns specified here will be excluded from rate limiting.
-    correlate:
-      Determines how rate limiting is applied. By default if not specified, rate limiting applies to the clients IP address.
+    
+  DOC
+}
+
+variable "cloudflare_zone_lockdowns" {
+  type        = map(any)
+  default     = {}
+  description = <<-DOC
+    
   DOC
 }
 

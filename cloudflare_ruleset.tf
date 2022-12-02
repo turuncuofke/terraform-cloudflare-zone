@@ -1,4 +1,4 @@
-resource "cloudflare_ruleset" "rate_limiting_example" {
+resource "cloudflare_ruleset" "default" {
   for_each = var.cloudflare_rulesets
 
   zone_id     = local.zone_id
