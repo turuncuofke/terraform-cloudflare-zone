@@ -77,7 +77,32 @@ variable "cloudflare_rulesets" {
   type        = map(any)
   default     = {}
   description = <<-DOC
-    
+    kind: 
+      Type of Ruleset to create.
+    name: 
+      Name of the ruleset.
+    phase: 
+      Point in the request/response lifecycle where the ruleset will be created.
+    description: 
+      Brief summary of the ruleset and its intended use.
+    rules: 
+      (Block List) List of rules to apply to the ruleset. Rules parameters:
+        expression:
+          Criteria for an HTTP request to trigger the ruleset rule action.
+        action:
+          Action to perform in the ruleset rule.
+        action_parameters: 
+          (Block List, Max: 1) List of parameters that configure the behavior of the ruleset rule action.
+        description:
+          Brief summary of the ruleset rule and its intended use.
+        enabled:
+          Whether the rule is active.
+        exposed_credential_check:
+          (Block List, Max: 1) List of parameters that configure exposed credential checks.
+        logging:
+          (Block List, Max: 1) List parameters to configure how the rule generates logs.
+        ratelimit:
+          (Block List, Max: 1) List of parameters that configure HTTP rate limiting behaviour.
   DOC
 }
 
@@ -85,7 +110,18 @@ variable "cloudflare_zone_lockdowns" {
   type        = map(any)
   default     = {}
   description = <<-DOC
-    
+    description:
+      A description about the lockdown entry. Typically used as a reminder or explanation for the lockdown.
+    urls:
+      A list of simple wildcard patterns to match requests against. The order of the urls is unimportant.
+    configurations:
+      A list of IP addresses or IP ranges to match the request against specified in target, value pairs. Configurations parameters:
+        target: 
+          The request property to target.
+        value:
+          The value to target. Depends on target's type.
+    paused:
+      Boolean of whether this zone lockdown is currently paused.
   DOC
 }
 
