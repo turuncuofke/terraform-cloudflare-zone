@@ -125,6 +125,14 @@ variable "cloudflare_zone_lockdowns" {
   DOC
 }
 
+variable "logging_options" {
+  type        = map(any)
+  default     = {}
+  description = <<-DOC
+    
+  DOC
+}
+
 variable "paused" {
   type        = bool
   description = "Whether this zone is paused (traffic bypasses Cloudflare)"
