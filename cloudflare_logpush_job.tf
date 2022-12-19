@@ -17,6 +17,7 @@ resource "cloudflare_logpush_job" "default" {
 
   zone_id             = local.zone_id
   enabled             = lookup(each.value, "enabled", true)
+  filter              = lookup(each.value, "filter", null)
   name                = "${local.logpush_job_name}-${replace(each.key, "_", "-")}-logs"
   logpull_options     = each.value.logpull_options
   destination_conf    = each.value.destination_conf
