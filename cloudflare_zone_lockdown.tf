@@ -3,6 +3,7 @@ resource "cloudflare_zone_lockdown" "default" {
 
   zone_id     = local.zone_id
   paused      = lookup(each.value, "paused", false)
+  priority    = each.value.priority
   description = lookup(each.value, "description", "")
   urls = each.value.urls
   dynamic "configurations" {
